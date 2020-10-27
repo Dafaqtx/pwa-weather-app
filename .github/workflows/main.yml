@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
-    - master
-    - release/*
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   firebase-deploy:
@@ -12,14 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@master
       with:
         node-version: '10.x'
     - run: npm install
-    - run: npm run build:prod
-    - uses: w9jds/firebase-action@master
-      with:
-        args: deploy --only hosting
+    - run: npm run build
+    - uses: w9jds/firebase-action@v1.5.0
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
